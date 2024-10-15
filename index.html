@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculos Do AgroDecision</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Cálculos Do AgroDecision</h1>
+        <h2>FASE UM DOS CÁLCULOS</h2>
+        <form id="calcForm">
+            <label for="cc">Capacidade de Campo (CC) %:</label>
+            <input type="number" id="cc" name="cc" required><br><br>
+            <label for="pi">Porcentagem Inicial de Umidade (PI) %:</label>
+            <input type="number" id="pi" name="pi" required><br><br>
+            <label for="apartirCicloCul">Apartir Ciclo Cul:</label>
+            <input type="number" id="apartirCicloCul" name="apartirCicloCul" required><br><br>
+            <label for="ateCicloCul">Ate Ciclo Cul:</label>
+            <input type="number" id="ateCicloCul" name="ateCicloCul" required><br><br>
+            <label for="etp">Evapotranspiração Potencial (ETp) %:</label>
+            <input type="number" id="etp" name="etp" required><br><br>
+            <label for="pua">Porcentagem de Umidade do Ar (PUA) %:</label>
+            <input type="number" id="pua" name="pua" required><br><br>
+            <label for="mf">Fator Mensal (MF):</label>
+            <input type="number" id="mf" name="mf" required><br><br>
+            <label for="t">Temperatura Média Mensal (T) ºC:</label>
+            <input type="number" id="t" name="t" required><br><br>
+            <label for="ur">Umidade Relativa Média Mensal (UR) %:</label>
+            <input type="number" id="ur" name="ur" required><br><br>
+            <button type="button" onclick="calcular()">Calcular</button>
+        </form>
+        <div class="result" id="result"></div>
+        <canvas id="evaporationChart" width="400" height="200"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
