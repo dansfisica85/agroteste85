@@ -71,18 +71,41 @@ function calcular() {
                     label: 'Precipitação Diária (mm)',
                     data: precipitacaoDiariaArray,
                     borderColor: 'blue',
-                    fill: false
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'blue',
+                    pointBorderColor: 'blue',
+                    pointRadius: 5,
+                    fill: true
                 },
                 {
                     label: 'Evapotranspiração Diária (mm)',
                     data: evapotranspiracaoDiariaArray,
                     borderColor: 'red',
-                    fill: false
+                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'red',
+                    pointBorderColor: 'red',
+                    pointRadius: 5,
+                    fill: true
                 }
             ]
         },
         options: {
             responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Gráfico de Evaporação por Precipitação'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
             scales: {
                 x: {
                     display: true,
