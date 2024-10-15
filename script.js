@@ -1,5 +1,5 @@
-async function fetchNasaPowerData(latitude, longitude, startDate, endDate) {
-    const response = await fetch(`https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN&community=AG&longitude=${longitude}&latitude=${latitude}&start=${startDate}&end=${endDate}&format=JSON`);
+async function fetchNasaPowerData(latitude, longitude, startDate, endDate, temporal = 'daily') {
+    const response = await fetch(`https://power.larc.nasa.gov/api/temporal/${temporal}/point?parameters=T2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN&community=AG&longitude=${longitude}&latitude=${latitude}&start=${startDate}&end=${endDate}&format=JSON`);
     const data = await response.json();
     return data.properties.parameter;
 }
@@ -103,34 +103,26 @@ async function calcular() {
         </table>
     `;
 
-    // Gerar gráfico de evaporação por precipitação
-    const ctx = document.getElementById('evaporationChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
+    // Gerar gráfico de barras dinâmico de evaporação por precipitação
+    const ctxBar = document.getElementById('evaporationChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
         data: {
             labels: Array.from({ length: dias }, (_, i) => `Dia ${i + 1}`),
             datasets: [
                 {
                     label: 'Precipitação Diária (mm)',
                     data: precipitacaoDiariaArray,
+                    backgroundColor: 'rgba(0, 0, 255, 0.5)',
                     borderColor: 'blue',
-                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: 'blue',
-                    pointBorderColor: 'blue',
-                    pointRadius: 5,
-                    fill: true
+                    borderWidth: 1
                 },
                 {
                     label: 'Evapotranspiração Diária (mm)',
                     data: evapotranspiracaoDiariaArray,
+                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
                     borderColor: 'red',
-                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: 'red',
-                    pointBorderColor: 'red',
-                    pointRadius: 5,
-                    fill: true
+                    borderWidth: 1
                 }
             ]
         },
@@ -185,17 +177,83 @@ async function calcular() {
         }
     });
 
-    // Previsão para os próximos meses
-    const previsaoMeses = 3; // Exemplo: previsão para os próximos 3 meses
-    const previsaoPrecipitacao = [];
-    const previsaoEvapotranspiracao = [];
+    // Gerar gráfico de linha dinâmico de temperatura
+    const ctxLine = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: dias }, (_, i) => `Dia ${i + 1}`),
+            datasets: [
+                {
+                    label: 'Temperatura Diária (°C)',
+                    data: Object.values(temperatureData),
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'green',
+                    pointBorderColor: 'green',
+                    pointRadius: 5,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Gráfico de Temperatura Diária'
+                },
+                legend: {
+                    display: true,
+                    position: 'top',
+                    onClick: (e, legendItem, legend) => {
+                        const index = legendItem.datasetIndex;
+                        const ci = legend.chart;
+                        const meta = ci.getDatasetMeta(index);
 
-    for (let i = 0; i < previsaoMeses; i++) {
-        const precipitacaoMensal = precipitationAvg * 30; // Exemplo: precipitação média mensal
-        const evapotranspiracaoMensal = etp * 30; // Exemplo: evapotranspiração média mensal
-        previsaoPrecipitacao.push(precipitacaoMensal);
-        previsaoEvapotranspiracao.push(evapotranspiracaoMensal);
-    }
+                        // Toggle the visibility
+                        meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+
+                        // Update the chart
+                        ci.update();
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Dias'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Temperatura (°C)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Previsão para os próximos 6 meses
+    const previsaoMeses = 6; // Previsão para os próximos 6 meses
+    const previsaoData = await fetchNasaPowerData(latitude, longitude, endDate, endDate, 'monthly');
+
+    const previsaoPrecipitacao = Object.values(previsaoData.PRECTOTCORR).slice(0, previsaoMeses);
+    const previsaoEvapotranspiracao = Object.values(previsaoData.ALLSKY_SFC_SW_DWN).slice(0, previsaoMeses).map(solarRadiation => calcularEvapotranspiracao(solarRadiation, t, ur) * 30);
 
     // Exibir previsão em uma tabela
     document.getElementById('result').innerHTML += `
