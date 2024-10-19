@@ -1,0 +1,72 @@
+body{
+    background-image: url('img/solEPlanta.webp');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+iframe{
+    border: none;
+    width: 80%;
+    max-width: 300px;
+    height: auto; 
+    gap: 50px;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.styleButtonCriar, .styleButtonLogin {
+    width: 250px;
+    margin-top: 10px;
+    padding: 10px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.styleButtonCriar{
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: white !important;
+    border: none;
+    border-radius: 50px;
+    margin-top: 100px;
+}
+.styleButtonLogin{
+    background-color: transparent !important;
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+    border-radius: 50px;
+}
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.styleButtonGoogle, .styleButtonFacebook {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.styleButtonGoogle {
+    background-color: #db4a39 !important;
+    border-color: #db4a39 !important;
+    color: white !important;
+    border-radius: 50px;
+}
+
+.styleButtonFacebook {
+    background-color: #3b5998 !important;
+    border-color: #3b5998 !important;
+    color: white !important;
+    border-radius: 50px;
+}
