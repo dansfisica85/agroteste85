@@ -1,0 +1,16 @@
+body{
+    background-color: #00bf64;
+}
+iframe{
+    border: none;
+    width: 80%;
+    max-width: 600px;
+    height: auto;
+}
+.frame{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 450px;
+    height: 100vh;
+}
